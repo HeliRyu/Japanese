@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.mapper.ProverbMapper">
+
+    <resultMap id="proverbResultMap" type="proverb">
+        <result property="proverb_name_jp_kanji" column="proverb_name_jp_kanji" />
+        <result property="proverb_name_jp_kana" column="proverb_name_jp_kana" />
+    </resultMap>
+
+
+
+    <delete id="deleteByIds">
+        delete from tb_proverb where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+
+    </delete>
+    <!-- where proverb_name = #{proverb.proverbName}-->
+    <select id="selectByPageAndCondition" resultMap="proverbResultMap">
+        select *
+        from tb_proverb
+        <where>
+            <if test="proverb.proverb_name_jp_kanji != null and proverb.proverb_name_jp_kanji != '' ">
+                and  proverb_name_jp_kanji like #{proverb_name_jp_kanji}
+            </if>
+
+            <if test="proverb.proverb_name_jp_kana != null and proverb.proverb_name_jp_kana != '' ">
+                and  proverb_name_jp_kana like #{proverb.proverb_name_jp_kana}
+            </if>
+
+
+        </where>
+
+        limit #{begin} , #{size}
+
+    </select>
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+
+        select count(*)
+        from tb_proverb
+        <where>
+            <if test="proverb_name_jp_kanji != null and proverb_name_jp_kanji != '' ">
+                and  proverb_name_jp_kanji like #{proverb_name_jp_kanji}
+            </if>
+
+            <if test="proverb_name_jp_kana != null and proverb_name_jp_kana != '' ">
+                and  proverb_name_jp_kana like #{proverb_name_jp_kana}
+            </if>
+
+        </where>
+
+    </select>
+
+</mapper>
